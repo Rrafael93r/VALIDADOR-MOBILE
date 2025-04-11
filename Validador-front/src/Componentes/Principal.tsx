@@ -8,7 +8,6 @@ const PaginaPrincipal = () => {
   const { user } = useAuth()
 
   // Determinar si el usuario es tramitador o paciente
-  const isTramitador = user?.perfil === "Tramitador"
   const isPaciente = user?.perfil === "Paciente"
 
   return (

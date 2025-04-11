@@ -22,20 +22,6 @@ import axios from "axios"
 import logonomas from "../assets/logo zafiro 1.png"
 
 function Register() {
-    interface Tramitador {
-        identificacion: string
-        tipoIdentificacion: string
-        nombre: string
-        telefono: string
-        perfil: string
-        direccion: string
-        soporteAdjunto1: string
-        soporteAdjunto2: string
-        estado: string
-        usuario: string
-        contrasena: string
-    }
-
     const [formData, setFormData] = useState({
         tipoIdentificacion: "",
         identificacion: "",
@@ -59,8 +45,8 @@ function Register() {
 
     const [validando, setValidando] = useState(false)
     const [validado, setValidado] = useState(false)
-    const [mensajeError, setMensajeError] = useState("")
-    const [mensajeExito, setMensajeExito] = useState("")
+    const [_mensajeError, setMensajeError] = useState("")
+    const [_mensajeExito, setMensajeExito] = useState("")
 
     const validarDocumento = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()

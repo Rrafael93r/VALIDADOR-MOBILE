@@ -17,25 +17,11 @@ const Registrotramite = () => {
         nombresede: string
     }
 
-    interface Tramitador {
-        identificacion: string
-        tipoIdentificacion: string
-        nombre: string
-        telefono: string
-        perfil: string
-        direccion: string
-        soporteAdjunto1: string
-        soporteAdjunto2: string
-        estado: string
-        usuario: string
-        contrasena: string
-    }
-
     const { user, isAuthenticated } = useAuth()
     const navigate = useNavigate()
 
     const [sedes, setSedes] = useState<Sede[]>([])
-    const [sedeSeleccionada, setSedeSeleccionada] = useState("")
+    const [_sedeSeleccionada, setSedeSeleccionada] = useState("")
     const [nombreTramitador, setNombreTramitador] = useState("")
     const [buscandoTramitador, setBuscandoTramitador] = useState(false)
     const [tramitadorEncontrado, setTramitadorEncontrado] = useState(false)

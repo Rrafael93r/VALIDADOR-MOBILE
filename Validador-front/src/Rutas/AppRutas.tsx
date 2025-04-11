@@ -10,7 +10,6 @@ import Registrotramite from "../Paginas/PaginaRegistroTramite"
 import AdministrarUsuario from "../Paginas/PaginaAjusteUsuario"
 import Historial from "../Paginas/PaginaHistorial"
 import AccesoDenegado from "../Paginas/AccesoDenegado"
-import Header from "../Componentes/Header"
 import { useEffect } from "react"
 
 function AppRoutes() {
