@@ -2,7 +2,7 @@
 
 import axios from "axios"
 
-const API_URL = "http://localhost:8080/api/tramitador"
+const API_URL = "http://10.0.1.249:8080/api/tramitador"
 
 export interface TramitadorData {
   identificacion: string

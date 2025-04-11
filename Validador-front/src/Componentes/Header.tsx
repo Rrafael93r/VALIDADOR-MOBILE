@@ -12,7 +12,6 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false)
 
   // Determinar si el usuario es tramitador o paciente
-  const isTramitador = user?.perfil === "Tramitador"
   const isPaciente = user?.perfil === "Paciente"
 
   const handleLogout = () => {

@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import axios from "axios"
 import { useAuth } from "../Servicios/useAuth"
 
-const API_URL = "http://localhost:8080/api/tramitador"
+const API_URL = "http://10.0.1.249:8080/api/tramitador"
 
 const Ajustecuenta = () => {
 
@@ -120,10 +120,10 @@ const Ajustecuenta = () => {
         }
 
         try {
-            
+
             const dataToSend = {
                 ...formData,
-                
+
                 contrasena: changePassword ? formData.contrasena : originalData?.contrasena || "",
             }
 
@@ -131,21 +131,21 @@ const Ajustecuenta = () => {
                 delete (dataToSend as { confirmarContrasena?: string }).confirmarContrasena
             }
 
-        
+
             console.log("Datos a enviar:", dataToSend)
 
-        
+
             const response = await axios.put(`${API_URL}/${formData.identificacion}`, dataToSend)
 
             if (response.status === 200) {
                 setSuccess("Datos actualizados correctamente")
 
-               
+
                 const currentUser = JSON.parse(localStorage.getItem("user") || "{}")
                 const updatedUser = { ...currentUser, ...response.data }
                 localStorage.setItem("user", JSON.stringify(updatedUser))
 
-                
+
                 if (auth && auth.checkAuth) {
                     auth.checkAuth()
                 }
