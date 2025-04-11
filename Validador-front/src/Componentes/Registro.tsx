@@ -65,7 +65,7 @@ function Register() {
         setMensajeError("")
 
         try {
-            const response = await axios.post("http://localhost:8080/api/validar/documento", {
+            const response = await axios.post("http://10.0.1.249:8080/api/validar/documento", {
                 tipoDocumento: formData.tipoIdentificacion,
                 numeroDocumento: formData.identificacion,
             })

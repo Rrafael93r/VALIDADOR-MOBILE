@@ -54,7 +54,7 @@ const Historial = () => {
         setError("")
 
         axios
-            .get("http://localhost:8080/api/registroafiliado")
+            .get("http://10.0.1.249:8080/api/registroafiliado")
             .then((response) => {
                 let tramitesData = response.data
 

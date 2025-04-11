@@ -3,7 +3,7 @@ import { FileSearch2, BadgeIcon as IdCard, LockKeyhole, UserCheck } from 'lucide
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const API_URL = "http://localhost:8080/api/tramitador";
+const API_URL = "http://10.0.1.249:8080/api/tramitador";
 
 const OlvideContraseña = () => {
     // Estados para manejar el formulario

@@ -28,7 +28,7 @@ const Registrotramite = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/sede")
+            .get("http://10.0.1.249:8080/api/sede")
             .then((response) => {
                 setSedes(response.data)
             })
@@ -70,7 +70,7 @@ const Registrotramite = () => {
     const [mensajeError, setMensajeError] = useState("")
     const [mensajeExito, setMensajeExito] = useState("")
 
-    
+
     useEffect(() => {
         if (user) {
             setFormData((prevData) => ({
@@ -91,7 +91,7 @@ const Registrotramite = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target
 
-  
+
         const fieldMap: { [key: string]: string } = {
             tipoIdentificacion: "tipoDocumentoAfiliado",
             identificacion: "numeroDocumentoAfiliado",
@@ -149,16 +149,16 @@ const Registrotramite = () => {
 
         try {
             // Obtener todos los tramitadores
-            const response = await axios.get("http://localhost:8080/api/tramitador")
+            const response = await axios.get("http://10.0.1.249:8080/api/tramitador")
             console.log("Tramitadores obtenidos:", response.data)
 
-            
+
             const tramitadorEncontrado = response.data.find((t: any) => {
                 const perfilMatch =
                     t.perfil &&
                     (t.perfil.toLowerCase() === "tramitador" ||
-                        t.perfil.toLowerCase() === "tramitador " || 
-                        t.perfil.toLowerCase() === " tramitador" || 
+                        t.perfil.toLowerCase() === "tramitador " ||
+                        t.perfil.toLowerCase() === " tramitador" ||
                         t.perfil.toLowerCase() === "Tramitador".toLowerCase())
 
                 console.log(
@@ -184,7 +184,7 @@ const Registrotramite = () => {
                 setTramitadorEncontrado(false)
 
 
-                
+
                 const tramitadorSinPerfilCorrecto = response.data.find(
                     (t: any) => t.tipoIdentificacion === tipoDocumento && t.identificacion === numeroDocumento,
                 )
@@ -246,7 +246,7 @@ const Registrotramite = () => {
         setMensajeError("")
         setMensajeExito("")
 
-       
+
         const now = new Date()
 
         const pad = (n: number) => n.toString().padStart(2, "0")
@@ -295,7 +295,7 @@ const Registrotramite = () => {
             }
 
             // Enviar datos al servidor
-            const response = await axios.post("http://localhost:8080/api/registroafiliado", formDataToSend, {
+            const response = await axios.post("http://10.0.1.249:8080/api/registroafiliado", formDataToSend, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
