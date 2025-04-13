@@ -11,7 +11,6 @@ import java.util.HashMap;
 @RequestMapping("/api/validar")
 public class ValidarDerechoControlador {
 
-
     @Autowired
     private ValidarDerechoServicio validarDerechoServicio;
 
@@ -46,6 +45,16 @@ public class ValidarDerechoControlador {
         }
     }
 
+    @PostMapping("/afiliado")
+    public ResponseEntity<String> validarAfiliado(@RequestBody Map<String, String> datos) {
+        String tipoDocumento = datos.get("tipoDocumento");
+        String numeroDocumento = datos.get("numeroDocumento");
 
-
+        try {
+            String resultado = validarDerechoServicio.validarAfiliado(tipoDocumento, numeroDocumento);
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.ok("Error al validar: " + e.getMessage());
+        }
+    }
 }
