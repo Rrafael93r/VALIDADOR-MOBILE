@@ -11,14 +11,12 @@ import org.json.JSONArray;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.validaor.api.Servicios.AfiliadoParser;
+
 @Service
 public class ValidarDerechoServicio {
-
-
-
     private static final String AUTH_URL = "https://gcp-mutualser-keycloak-prod.appspot.com/auth/realms/right-validation/protocol/openid-connect/token";
     private static final String VALIDATE_URL = "https://validador-derechos.mutualser.com/validateRights/";
-
 
     private static final String USERNAME = "pharmaser-prevrenal";
     private static final String PASSWORD = "Ph4rM453rPr3Vr3N41";
@@ -70,7 +68,10 @@ public class ValidarDerechoServicio {
         try {
             OkHttpClient client = new OkHttpClient().newBuilder().build();
             MediaType mediaType = MediaType.parse("application/json");
-            String jsonBody = "{\r\n    \"resourceType\": \"Parameters\",\r\n    \"id\": \"CorrelationId\",\r\n    \"parameter\": [\r\n        {\r\n            \"name\": \"documentType\",\r\n            \"valueString\": \"" + tipid + "\"\r\n        },\r\n        {\r\n            \"name\": \"documentId\",\r\n            \"valueString\": \"" + ident + "\"\r\n        }\r\n    ]\r\n}";
+            String jsonBody = "{\r\n    \"resourceType\": \"Parameters\",\r\n    \"id\": \"CorrelationId\",\r\n    \"parameter\": [\r\n        {\r\n            \"name\": \"documentType\",\r\n            \"valueString\": \""
+                    + tipid
+                    + "\"\r\n        },\r\n        {\r\n            \"name\": \"documentId\",\r\n            \"valueString\": \""
+                    + ident + "\"\r\n        }\r\n    ]\r\n}";
 
             RequestBody body = RequestBody.create(mediaType, jsonBody);
             Request request = new Request.Builder()
@@ -144,4 +145,44 @@ public class ValidarDerechoServicio {
         return textoretorna;
     }
 
+    public String validarAfiliado(String tipoDocumento, String numeroDocumento) throws Exception {
+        // Obtener token
+        String token = generarToken(PASSWORD, USERNAME, SECRET, CLIENT_ID);
+        if (token == null || token.isEmpty()) {
+            throw new Exception("No se pudo obtener el token de autenticación");
+        }
+
+        // Consultar información del paciente
+        return obtenerDatosAfiliado(token, tipoDocumento, numeroDocumento);
+    }
+
+    private String obtenerDatosAfiliado(String token, String tipoDocumento, String numeroDocumento) throws Exception {
+        try {
+            OkHttpClient client = new OkHttpClient();
+            String jsonBody = "{\r\n    \"resourceType\": \"Parameters\",\r\n    \"id\": \"CorrelationId\",\r\n    \"parameter\": [\r\n        {\r\n            \"name\": \"documentType\",\r\n            \"valueString\": \""
+                    + tipoDocumento
+                    + "\"\r\n        },\r\n        {\r\n            \"name\": \"documentId\",\r\n            \"valueString\": \""
+                    + numeroDocumento + "\"\r\n        }\r\n    ]\r\n}";
+
+            RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
+            Request request = new Request.Builder()
+                    .url(VALIDATE_URL)
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Accept", "*/*")
+                    .addHeader("Authorization", "Bearer " + token)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.code() == 200 && response.body() != null) {
+                    return AfiliadoParser.procesarRespuesta(response.body().string());
+                } else {
+                    throw new Exception("Error al consultar información del paciente " + response.code());
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ValidarDerechoServicio.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al consultar información del paciente");
+        }
+    }
 }
