@@ -3,7 +3,9 @@ import { FileSearch2, BadgeIcon as IdCard, LockKeyhole, UserCheck } from 'lucide
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const API_URL = "http://10.0.1.249:8080/api/tramitador";
+
+
+const API_TRAMITADOR = import.meta.env.VITE_API_TRAMITADOR;
 
 const OlvideContraseña = () => {
     // Estados para manejar el formulario
@@ -55,7 +57,7 @@ const OlvideContraseña = () => {
 
         try {
             // Obtener todos los tramitadores
-            const response = await axios.get(`${API_URL}`);
+            const response = await axios.get(`${API_TRAMITADOR}`);
 
             // Buscar el tramitador con el tipo y número de documento que coincida
             const tramitadorEncontrado = response.data.find((t: { tipoIdentificacion: string; identificacion: string; }) =>
@@ -122,7 +124,7 @@ const OlvideContraseña = () => {
 
         try {
             // Primero obtenemos los datos completos del tramitador
-            const getResponse = await axios.get(`${API_URL}/${tramitadorId}`);
+            const getResponse = await axios.get(`${API_TRAMITADOR}/${tramitadorId}`);
             const tramitadorData = getResponse.data;
 
             // Actualizamos solo la contraseña
@@ -132,7 +134,7 @@ const OlvideContraseña = () => {
             };
 
             // Enviamos la actualización
-            const response = await axios.put(`${API_URL}/${tramitadorId}`, dataToUpdate);
+            const response = await axios.put(`${API_TRAMITADOR}/${tramitadorId}`, dataToUpdate);
 
             if (response.status === 200) {
                 Swal.fire({

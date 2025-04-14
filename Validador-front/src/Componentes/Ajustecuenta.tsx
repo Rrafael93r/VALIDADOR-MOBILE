@@ -4,7 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import axios from "axios"
 import { useAuth } from "../Servicios/useAuth"
 
-const API_URL = "http://10.0.1.249:8080/api/tramitador"
+
+const API_TRAMITADOR = import.meta.env.VITE_API_TRAMITADOR;
 
 const Ajustecuenta = () => {
 
@@ -54,7 +55,7 @@ const Ajustecuenta = () => {
             }
 
             try {
-                const response = await axios.get(`${API_URL}/${user.identificacion}`)
+                const response = await axios.get(`${API_TRAMITADOR}/${user.identificacion}`)
                 const userData = response.data
 
                 // Guardar datos originales para referencia
@@ -135,7 +136,7 @@ const Ajustecuenta = () => {
             console.log("Datos a enviar:", dataToSend)
 
 
-            const response = await axios.put(`${API_URL}/${formData.identificacion}`, dataToSend)
+            const response = await axios.put(`${API_TRAMITADOR}/${formData.identificacion}`, dataToSend)
 
             if (response.status === 200) {
                 setSuccess("Datos actualizados correctamente")

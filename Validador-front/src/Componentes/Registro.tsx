@@ -43,6 +43,9 @@ function Register() {
     const [opcion, setOpcion] = useState("-")
 
 
+
+    const API_VALIDARDOCUMENTO = import.meta.env.VITE_API_VALIDARDOCUMENTO;
+
     const [validando, setValidando] = useState(false)
     const [validado, setValidado] = useState(false)
     const [_mensajeError, setMensajeError] = useState("")
@@ -65,7 +68,7 @@ function Register() {
         setMensajeError("")
 
         try {
-            const response = await axios.post("http://10.0.1.249:8080/api/validar/documento", {
+            const response = await axios.post(`${API_VALIDARDOCUMENTO}`, {
                 tipoDocumento: formData.tipoIdentificacion,
                 numeroDocumento: formData.identificacion,
             })

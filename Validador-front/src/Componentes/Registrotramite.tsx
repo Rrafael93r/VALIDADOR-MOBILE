@@ -1,4 +1,6 @@
+"use client"
 
+import type React from "react"
 
 import { useState, useEffect } from "react"
 import { User, BadgeIcon as IdCard, FileText, FileSearch2 } from "lucide-react"
@@ -20,6 +22,10 @@ const Registrotramite = () => {
     const { user, isAuthenticated } = useAuth()
     const navigate = useNavigate()
 
+    const API_TRAMITADOR = import.meta.env.VITE_API_TRAMITADOR
+    const API_SEDES = import.meta.env.VITE_API_SEDES
+    const API_REGISTROAFILIADO = import.meta.env.VITE_API_REGISTROAFILIADO
+
     const [sedes, setSedes] = useState<Sede[]>([])
     const [_sedeSeleccionada, setSedeSeleccionada] = useState("")
     const [nombreTramitador, setNombreTramitador] = useState("")
@@ -28,7 +34,7 @@ const Registrotramite = () => {
 
     useEffect(() => {
         axios
-            .get("http://10.0.1.249:8080/api/sede")
+            .get(`${API_SEDES}`)
             .then((response) => {
                 setSedes(response.data)
             })
@@ -43,8 +49,6 @@ const Registrotramite = () => {
         }
     }, [isAuthenticated, navigate])
 
-    // Estados para manejar el formulario
-    // Actualizar el estado inicial de formData para incluir los campos correctos
     const [formData, setFormData] = useState({
         tipoDocumentoAfiliado: user?.tipoIdentificacion || "",
         numeroDocumentoAfiliado: user?.identificacion || "",
@@ -57,19 +61,16 @@ const Registrotramite = () => {
         sede: "",
     })
 
-    // Estado para manejar archivos
     const [archivos, setArchivos] = useState({
         soporteAdjunto1: null,
         soporteAdjunto2: null,
         soporteFormula: null,
     })
 
-
     const [validado, setValidado] = useState(false)
     const [enviando, setEnviando] = useState(false)
     const [mensajeError, setMensajeError] = useState("")
     const [mensajeExito, setMensajeExito] = useState("")
-
 
     useEffect(() => {
         if (user) {
@@ -87,10 +88,8 @@ const Registrotramite = () => {
         }
     }, [user])
 
-    // Manejar cambios en los inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target
-
 
         const fieldMap: { [key: string]: string } = {
             tipoIdentificacion: "tipoDocumentoAfiliado",
@@ -120,15 +119,24 @@ const Registrotramite = () => {
         const { id, files } = e.target
 
         if (files && files.length > 0) {
-            const fieldName = id === "soporte_adjunto1" ? "soporteAdjunto1" : "soporteAdjunto2"
+            // Determinar qué campo actualizar según el ID del input
+            let fieldName
+            if (id === "soporte_adjunto1") {
+                fieldName = "soporteAdjunto1"
+            } else if (id === "soporte_adjunto2") {
+                fieldName = "soporteAdjunto2"
+            } else if (id === "soporte_formula") {
+                fieldName = "soporteFormula"
+            }
 
-            setArchivos({
-                ...archivos,
-                [fieldName]: files[0],
-            })
+            if (fieldName) {
+                setArchivos({
+                    ...archivos,
+                    [fieldName]: files[0],
+                })
+            }
         }
     }
-
 
     const buscarTramitador = async () => {
         const tipoDocumento = (document.getElementById("tipoIdentificacionTramitador") as HTMLSelectElement)?.value
@@ -149,9 +157,8 @@ const Registrotramite = () => {
 
         try {
             // Obtener todos los tramitadores
-            const response = await axios.get("http://10.0.1.249:8080/api/tramitador")
+            const response = await axios.get(`${API_TRAMITADOR}`)
             console.log("Tramitadores obtenidos:", response.data)
-
 
             const tramitadorEncontrado = response.data.find((t: any) => {
                 const perfilMatch =
@@ -182,8 +189,6 @@ const Registrotramite = () => {
                 console.log("No se encontró tramitador con los criterios especificados")
                 setNombreTramitador("")
                 setTramitadorEncontrado(false)
-
-
 
                 const tramitadorSinPerfilCorrecto = response.data.find(
                     (t: any) => t.tipoIdentificacion === tipoDocumento && t.identificacion === numeroDocumento,
@@ -217,13 +222,9 @@ const Registrotramite = () => {
         }
     }
 
-
-
     // Función para enviar el formulario completo
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-
 
         if (!formData.sede) {
             setMensajeError("Por favor, selecciona una sede")
@@ -245,7 +246,6 @@ const Registrotramite = () => {
         setEnviando(true)
         setMensajeError("")
         setMensajeExito("")
-
 
         const now = new Date()
 
@@ -288,14 +288,12 @@ const Registrotramite = () => {
             if (archivos.soporteAdjunto2) {
                 formDataToSend.append("soporteAdjunto2", archivos.soporteAdjunto2)
             }
-            if (!archivos.soporteFormula) {
-                if (archivos.soporteFormula) {
-                    formDataToSend.append("soporteFormula", archivos.soporteFormula)
-                }
+            if (archivos.soporteFormula) {
+                formDataToSend.append("soporteFormula", archivos.soporteFormula)
             }
 
             // Enviar datos al servidor
-            const response = await axios.post("http://10.0.1.249:8080/api/registroafiliado", formDataToSend, {
+            const response = await axios.post(`${API_REGISTROAFILIADO}`, formDataToSend, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -383,7 +381,6 @@ const Registrotramite = () => {
                             onChange={handleChange}
                         >
                             <option value="CC">CC</option>
-
                         </select>
                     </div>
 
@@ -479,7 +476,7 @@ const Registrotramite = () => {
 
                     <div className="row">
                         <div className="mb-4 ">
-                            <label htmlFor="soporte_adjunto1" className="form-label small fw-medium">
+                            <label htmlFor="soporte_formula" className="form-label small fw-medium">
                                 Formula <span className="text-danger">*</span>
                             </label>
                             <div className="input-group">
@@ -487,15 +484,15 @@ const Registrotramite = () => {
                                     <FileText size={20} className="text-secondary" />
                                 </span>
                                 <input
-                                    id="soporte_adjunto1"
+                                    id="soporte_formula"
                                     type="file"
                                     className="form-control border-start-0"
                                     required
                                     onChange={handleFileChange}
-                                    accept="image, application/pdf/*"
+                                    accept="image/*, application/pdf"
                                 />
                             </div>
-                            {validado && !archivos.soporteAdjunto1 && (
+                            {validado && !archivos.soporteFormula && (
                                 <div className="form-text text-danger mt-1">Este campo es obligatorio</div>
                             )}
                         </div>
@@ -569,11 +566,7 @@ const Registrotramite = () => {
                             }
                             onMouseOut={(e) => (e.currentTarget.style.backgroundColor = tramitadorEncontrado ? "#28a745" : "#31529c")}
                             onClick={buscarTramitador}
-                            disabled={
-                                buscandoTramitador ||
-                                !formData.tipoDocumentoTramitador ||
-                                !formData.numeroDocumentoTramitador
-                            }
+                            disabled={buscandoTramitador || !formData.tipoDocumentoTramitador || !formData.numeroDocumentoTramitador}
                         >
                             <FileSearch2 size={20} className="text-white" />
                         </button>
@@ -626,8 +619,6 @@ const Registrotramite = () => {
                             </option>
                         ))}
                     </select>
-
-
                 </div>
 
                 <button

@@ -2,7 +2,7 @@
 
 import axios from "axios"
 
-const API_URL = "http://10.0.1.249:8080/api/tramitador"
+
 
 export interface TramitadorData {
   identificacion: string
@@ -18,13 +18,15 @@ export interface TramitadorData {
   perfil: string
 }
 
+const API_TRAMITADOR = import.meta.env.VITE_API_TRAMITADOR;
+
 export const authService = {
   async login(usuario: string, contrasena: string) {
     try {
       console.log("Intentando login con usuario:", usuario)
 
       // Primero, buscar el tramitador por usuario para obtener la identificación
-      const tramitadores = await axios.get(`${API_URL}`)
+      const tramitadores = await axios.get(`${API_TRAMITADOR}`)
       console.log("Tramitadores obtenidos:", tramitadores.data.length)
 
       const tramitador = tramitadores.data.find((t: any) => t.usuario === usuario)
@@ -36,7 +38,7 @@ export const authService = {
       console.log("Tramitador encontrado:", tramitador.identificacion)
 
       // Ahora hacer login con identificación y contraseña
-      const response = await axios.post(`${API_URL}/login`, {
+      const response = await axios.post(`${API_TRAMITADOR}/login`, {
         identificacion: tramitador.identificacion,
         contrasena,
       })
@@ -73,7 +75,7 @@ export const authService = {
         perfil: tramitadorData.perfil || "Tramitador" // Valor por defecto
       }
 
-      const registerResponse = await axios.post(API_URL, dataToSend)
+      const registerResponse = await axios.post(API_TRAMITADOR, dataToSend)
       return registerResponse.data
     } catch (error: any) {
       if (error.response?.data) {
