@@ -44,6 +44,8 @@ const Historial = () => {
     const [itemsPerPage] = useState(5)
     const [error, setError] = useState("")
 
+    const API_REGISTROAFILIADO = import.meta.env.VITE_API_REGISTROAFILIADO;
+
     // Determinar el perfil del usuario
     const isTramitador = user?.perfil === "Tramitador"
     const isPaciente = user?.perfil === "Paciente"
@@ -54,7 +56,7 @@ const Historial = () => {
         setError("")
 
         axios
-            .get("http://10.0.1.249:8080/api/registroafiliado")
+            .get(`${API_REGISTROAFILIADO}`)
             .then((response) => {
                 let tramitesData = response.data
 
@@ -81,7 +83,6 @@ const Historial = () => {
                 setLoading(false)
             })
             .catch((error) => {
-                console.error("Error al obtener los trámites:", error)
                 setError("No se pudieron cargar los trámites. Por favor, intente nuevamente.")
                 setLoading(false)
             })

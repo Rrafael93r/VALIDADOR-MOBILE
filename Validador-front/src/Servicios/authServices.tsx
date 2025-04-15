@@ -2,7 +2,7 @@
 
 import axios from "axios"
 
-const API_URL = "http://10.0.1.249:8080/api/tramitador"
+
 
 export interface TramitadorData {
   identificacion: string
@@ -18,39 +18,34 @@ export interface TramitadorData {
   perfil: string
 }
 
+const API_TRAMITADOR = import.meta.env.VITE_API_TRAMITADOR;
+
 export const authService = {
   async login(usuario: string, contrasena: string) {
     try {
-      console.log("Intentando login con usuario:", usuario)
 
       // Primero, buscar el tramitador por usuario para obtener la identificación
-      const tramitadores = await axios.get(`${API_URL}`)
-      console.log("Tramitadores obtenidos:", tramitadores.data.length)
+      const tramitadores = await axios.get(`${API_TRAMITADOR}`)
 
       const tramitador = tramitadores.data.find((t: any) => t.usuario === usuario)
       if (!tramitador) {
-        console.error("Usuario no encontrado:", usuario)
         throw new Error("Usuario no encontrado")
       }
 
-      console.log("Tramitador encontrado:", tramitador.identificacion)
 
       // Ahora hacer login con identificación y contraseña
-      const response = await axios.post(`${API_URL}/login`, {
+      const response = await axios.post(`${API_TRAMITADOR}/login`, {
         identificacion: tramitador.identificacion,
         contrasena,
       })
 
-      console.log("Respuesta de login:", response.status)
 
       if (response.data) {
-        console.log("Datos de usuario recibidos:", response.data)
         return response.data
       }
 
       throw new Error("Credenciales inválidas")
     } catch (error: any) {
-      console.error("Error en login:", error)
       if (error.response?.status === 401) {
         throw new Error("Usuario o contraseña incorrectos")
       }
@@ -73,7 +68,7 @@ export const authService = {
         perfil: tramitadorData.perfil || "Tramitador" // Valor por defecto
       }
 
-      const registerResponse = await axios.post(API_URL, dataToSend)
+      const registerResponse = await axios.post(API_TRAMITADOR, dataToSend)
       return registerResponse.data
     } catch (error: any) {
       if (error.response?.data) {
@@ -93,7 +88,6 @@ export const authService = {
     try {
       return JSON.parse(userStr)
     } catch (error) {
-      console.error("Error al parsear usuario actual:", error)
       return null
     }
   },
