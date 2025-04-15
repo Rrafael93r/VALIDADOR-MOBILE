@@ -88,7 +88,6 @@ const OlvideContraseña = () => {
                 });
             }
         } catch (error) {
-            console.error("Error al buscar el usuario:", error);
 
             Swal.fire({
                 icon: "error",
@@ -153,7 +152,6 @@ const OlvideContraseña = () => {
                 setUsuarioEncontrado(false);
             }
         } catch (error) {
-            console.error("Error al actualizar la contraseña:", error);
 
             Swal.fire({
                 icon: "error",

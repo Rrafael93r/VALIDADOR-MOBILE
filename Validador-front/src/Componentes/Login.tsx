@@ -46,12 +46,9 @@ function Login() {
     setLoading(true)
 
     try {
-      console.log("Intentando login con:", formData.usuario)
       await login(formData.usuario, formData.contrasena)
-      console.log("Login exitoso, redirigiendo...")
       navigate("/dashboard")
     } catch (error: any) {
-      console.error("Error en handleSubmit:", error)
       setError(error.message || "Error al iniciar sesión")
     } finally {
       setLoading(false)
@@ -65,6 +62,8 @@ function Login() {
           <div className="col-12 col-lg-10">
             <div className="card shadow border-0 overflow-hidden">
               <div className="row g-0">
+
+                
                 <div className="col-lg-6 p-4 p-md-5">
                   <div className="mb-4 mb-md-5">
                     <h2 className="fw-bold mb-3">Iniciar Sesión</h2>

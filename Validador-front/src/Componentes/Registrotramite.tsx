@@ -38,9 +38,7 @@ const Registrotramite = () => {
             .then((response) => {
                 setSedes(response.data)
             })
-            .catch((error) => {
-                console.error("Error fetching sedes:", error)
-            })
+            
     }, [])
 
     useEffect(() => {
@@ -158,7 +156,6 @@ const Registrotramite = () => {
         try {
             // Obtener todos los tramitadores
             const response = await axios.get(`${API_TRAMITADOR}`)
-            console.log("Tramitadores obtenidos:", response.data)
 
             const tramitadorEncontrado = response.data.find((t: any) => {
                 const perfilMatch =
@@ -168,15 +165,12 @@ const Registrotramite = () => {
                         t.perfil.toLowerCase() === " tramitador" ||
                         t.perfil.toLowerCase() === "Tramitador".toLowerCase())
 
-                console.log(
-                    `Comparando: ${t.tipoIdentificacion}=${tipoDocumento}, ${t.identificacion}=${numeroDocumento}, perfil=${t.perfil}, match=${perfilMatch}`,
-                )
+                
 
                 return t.tipoIdentificacion === tipoDocumento && t.identificacion === numeroDocumento && perfilMatch
             })
 
             if (tramitadorEncontrado) {
-                console.log("Tramitador encontrado:", tramitadorEncontrado)
                 setNombreTramitador(tramitadorEncontrado.nombre)
                 setTramitadorEncontrado(true)
 
@@ -186,7 +180,6 @@ const Registrotramite = () => {
                     text: `Se ha encontrado el tramitador: ${tramitadorEncontrado.nombre}`,
                 })
             } else {
-                console.log("No se encontró tramitador con los criterios especificados")
                 setNombreTramitador("")
                 setTramitadorEncontrado(false)
 
@@ -209,7 +202,6 @@ const Registrotramite = () => {
                 }
             }
         } catch (error: any) {
-            console.error("Error al buscar el tramitador:", error)
             setMensajeError("Error al buscar el tramitador: " + (error.message || "Error desconocido"))
 
             Swal.fire({
@@ -288,8 +280,10 @@ const Registrotramite = () => {
             if (archivos.soporteAdjunto2) {
                 formDataToSend.append("soporteAdjunto2", archivos.soporteAdjunto2)
             }
+
+            // Importante: Usar "soporteformula" (con f minúscula) para coincidir con el backend
             if (archivos.soporteFormula) {
-                formDataToSend.append("soporteFormula", archivos.soporteFormula)
+                formDataToSend.append("soporteformula", archivos.soporteFormula)
             }
 
             // Enviar datos al servidor
@@ -443,7 +437,7 @@ const Registrotramite = () => {
                                     className="form-control border-start-0"
                                     required
                                     onChange={handleFileChange}
-                                    accept="image, application/pdf/*"
+                                    accept="image/*, application/pdf"
                                 />
                             </div>
                             {validado && !archivos.soporteAdjunto1 && (

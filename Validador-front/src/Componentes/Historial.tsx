@@ -83,7 +83,6 @@ const Historial = () => {
                 setLoading(false)
             })
             .catch((error) => {
-                console.error("Error al obtener los trámites:", error)
                 setError("No se pudieron cargar los trámites. Por favor, intente nuevamente.")
                 setLoading(false)
             })

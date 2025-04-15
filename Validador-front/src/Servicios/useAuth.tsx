@@ -27,9 +27,9 @@ const defaultContextValue: AuthContextType = {
   isAuthenticated: false,
   user: null,
   loading: true,
-  login: async () => {},
-  logout: () => {},
-  checkAuth: () => {},
+  login: async () => { },
+  logout: () => { },
+  checkAuth: () => { },
   hasPermission: () => false,
 }
 
@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const checkAuth = () => {
     try {
       const userStr = localStorage.getItem("user")
-      console.log("checkAuth - userStr:", userStr)
 
       if (userStr && userStr !== "undefined" && userStr !== "null") {
         try {
@@ -55,26 +54,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           if (currentUser && currentUser.identificacion) {
             setIsAuthenticated(true)
             setUser(currentUser)
-            console.log("Usuario autenticado:", currentUser)
           } else {
-            console.warn("Datos de usuario incompletos:", currentUser)
             setIsAuthenticated(false)
             setUser(null)
             localStorage.removeItem("user")
           }
         } catch (parseError) {
-          console.error("Error al parsear datos de usuario:", parseError)
           setIsAuthenticated(false)
           setUser(null)
           localStorage.removeItem("user")
         }
       } else {
-        console.log("No hay datos de usuario en localStorage")
         setIsAuthenticated(false)
         setUser(null)
       }
     } catch (error) {
-      console.error("Error al verificar autenticación:", error)
       setIsAuthenticated(false)
       setUser(null)
     } finally {
@@ -91,14 +85,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("user", JSON.stringify(userData))
 
       // Verificar que se guardó correctamente
-      const savedUser = localStorage.getItem("user")
-      console.log("Usuario guardado en localStorage:", savedUser)
+     
 
       // Actualizar estado
       setIsAuthenticated(true)
       setUser(userData)
     } catch (error) {
-      console.error("Error durante login:", error)
       throw error
     }
   }
@@ -109,7 +101,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAuthenticated(false)
       setUser(null)
     } catch (error) {
-      console.error("Error durante logout:", error)
     }
   }
 

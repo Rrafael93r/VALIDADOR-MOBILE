@@ -23,19 +23,15 @@ const API_TRAMITADOR = import.meta.env.VITE_API_TRAMITADOR;
 export const authService = {
   async login(usuario: string, contrasena: string) {
     try {
-      console.log("Intentando login con usuario:", usuario)
 
       // Primero, buscar el tramitador por usuario para obtener la identificación
       const tramitadores = await axios.get(`${API_TRAMITADOR}`)
-      console.log("Tramitadores obtenidos:", tramitadores.data.length)
 
       const tramitador = tramitadores.data.find((t: any) => t.usuario === usuario)
       if (!tramitador) {
-        console.error("Usuario no encontrado:", usuario)
         throw new Error("Usuario no encontrado")
       }
 
-      console.log("Tramitador encontrado:", tramitador.identificacion)
 
       // Ahora hacer login con identificación y contraseña
       const response = await axios.post(`${API_TRAMITADOR}/login`, {
@@ -43,16 +39,13 @@ export const authService = {
         contrasena,
       })
 
-      console.log("Respuesta de login:", response.status)
 
       if (response.data) {
-        console.log("Datos de usuario recibidos:", response.data)
         return response.data
       }
 
       throw new Error("Credenciales inválidas")
     } catch (error: any) {
-      console.error("Error en login:", error)
       if (error.response?.status === 401) {
         throw new Error("Usuario o contraseña incorrectos")
       }
@@ -95,7 +88,6 @@ export const authService = {
     try {
       return JSON.parse(userStr)
     } catch (error) {
-      console.error("Error al parsear usuario actual:", error)
       return null
     }
   },

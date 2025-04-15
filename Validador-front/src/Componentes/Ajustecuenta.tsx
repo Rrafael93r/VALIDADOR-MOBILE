@@ -77,7 +77,6 @@ const Ajustecuenta = () => {
                 })
                 setLoading(false)
             } catch (err) {
-                console.error("Error al cargar datos del usuario:", err)
                 setError("No se pudieron cargar los datos del usuario. Por favor, intente nuevamente.")
                 setLoading(false)
             }
@@ -133,7 +132,6 @@ const Ajustecuenta = () => {
             }
 
 
-            console.log("Datos a enviar:", dataToSend)
 
 
             const response = await axios.put(`${API_TRAMITADOR}/${formData.identificacion}`, dataToSend)
@@ -152,9 +150,6 @@ const Ajustecuenta = () => {
                 }
             }
         } catch (err: any) {
-            console.error("Error al actualizar datos:", err)
-            console.error("Respuesta del servidor:", err.response?.data)
-            console.error("Estado HTTP:", err.response?.status)
             setError(err.response?.data || "Error al actualizar los datos. Por favor, intente nuevamente.")
         }
     }
